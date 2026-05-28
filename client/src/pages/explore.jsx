@@ -64,7 +64,7 @@ const ExplorePage = () => {
               <p className="mt-4 max-w-2xl text-slate-400">Navegue por jogos, plataformas, tags e desenvolvedores. Clique em qualquer card para ver mais detalhes.</p>
             </div>
             <div className="w-full sm:w-auto">
-              <label className="text-sm font-semibold text-slate-300 mb-2 inline-block">Buscar jogos</label>
+              <label className="text-sm font-semibold mr-2 text-slate-300 mb-2 inline-block">Buscar jogos</label>
               <input
                 type="text"
                 value={searchQuery}

@@ -115,7 +115,7 @@ const GameJamsPage = () => {
               <p className="mt-4 max-w-2xl text-slate-400">Participe de competições de desenvolvimento de jogos, mostre suas habilidades e faça networking com outros desenvolvedores.</p>
             </div>
             <div className="w-full sm:w-auto">
-              <label className="text-sm font-semibold text-slate-300 mb-2 inline-block">Buscar jams</label>
+              <label className="text-sm font-semibold text-slate-300 mb-2 mr-2 inline-block">Buscar jams</label>
               <input
                 type="text"
                 value={searchQuery}

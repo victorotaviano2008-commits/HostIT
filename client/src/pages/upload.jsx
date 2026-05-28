@@ -308,7 +308,7 @@ const UploadPage = () => {
                       </div>
                     </button>
                   ))}
-                  <div>
+                  <div className="grid gap-4 md:grid-cols-1 md:col-span-3">
                     <h1>Compartilhe 5% para distribuir, 10% para acrecentar na divulgação de seu jogo e 20% para estar participando da central da comunidade e ajuda financeira no projeto após analise previa.</h1>
                   </div>
                 </div>

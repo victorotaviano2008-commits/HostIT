@@ -97,10 +97,10 @@ const Main = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
           
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight max-w-3xl mx-auto leading-tight">
-          Onde gamedevs hospedam jogos e <span className="text-transparent bg-clip-text bg-gradient-to-r select-none from-indigo-400 to-purple-400">compartilham código.</span>
+          HOST<span className="text-transparent bg-clip-text bg-gradient-to-r select-none from-indigo-400 to-purple-400">IT</span>
           </h1>
           <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto font-medium">
-          Explore criações independentes, faça forks de projetos open-source e colabore com a maior comunidade de desenvolvedores de jogos do mundo.
+          Explore criações independentes, hospede jogos gratuitamente e conecte-se com uma comunidade apaixonada por desenvolvimento de jogos. Publique seus projetos, compartilhe código e faça parte da revolução indie!
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
           <button onClick={() => navigate('/explore')} className="bg-slate-900 border border-slate-800 hover:border-slate-700 font-semibold px-6 py-2.5 rounded-lg transition-all">
