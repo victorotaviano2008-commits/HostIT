@@ -22,17 +22,27 @@ const GamePlayer = () => {
         );
     };
 
+    const normalizeGameResponse = (data) => {
+        if (!data || typeof data !== 'object') return data;
+        const rawFileUrl = data.fileURL ?? data.fileUrl ?? data.url ?? null;
+        return {
+            ...data,
+            fileURL: getSafeFileUrl(rawFileUrl)
+        };
+    };
+
     useEffect(() => {
         const fetchGame = async () => {
             try {
                 const response = await database.get(`/games/${id}`);
                 console.log('Game data fetched:', response.data);
-                const safeData = {
-                    ...response.data,
-                    fileURL: getSafeFileUrl(response.data.fileURL),
-                };
+                const safeData = normalizeGameResponse(response.data);
+                console.log('Normalized game data:', safeData);
+                if (!safeData.fileURL) {
+                    throw new Error('Game file URL is missing');
+                }
                 setGame(safeData);
-                setIsFavorited(!!response.data.isFavorited);
+                setIsFavorited(!!safeData.isFavorited);
             } catch (err) {
                 setError('Error loading game: ' + (err.response?.data?.message || err.message));
                 console.error('Error fetching game:', err);
