@@ -8,4 +8,4 @@ router.post('/forgot-password', authControllers.forgotPassword);
 router.get('/verify-reset-token', authControllers.verifyResetToken);
 router.post('/reset-password', authControllers.resetPassword);
 
-module.exports = router;const authControllers = require('../controllers/authController');
+module.exports = router;
