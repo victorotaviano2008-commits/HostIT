@@ -36,6 +36,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
+// Simple health check to verify server is up and CORS is working
+app.get('/health', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  return res.json({ status: 'ok' });
+});
 // Ensure WebGL build files are served with correct MIME types and CORS headers
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', (req, res, next) => {
