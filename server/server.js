@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = ['http://localhost:3000', process.env.FRONTEND_URL];
+    const allowedOrigins = [process.env.BACKEND_URL, process.env.FRONTEND_URL];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
