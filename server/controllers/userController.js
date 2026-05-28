@@ -45,11 +45,7 @@ const findHtmlEntry = (entries) => {
 const getRequestOrigin = (req) => {
     const envOrigin = process.env.BACKEND_URL;
     if (envOrigin) {
-        const normalizedEnvOrigin = envOrigin.trim().replace(/\/+$/, '');
-        if (normalizedEnvOrigin.startsWith('http://')) {
-            return normalizedEnvOrigin.replace(/^http:\/\//, 'https://');
-        }
-        return normalizedEnvOrigin;
+        return envOrigin.replace(/\/$/, '');
     }
 
     const forwardedProto = req.headers['x-forwarded-proto']
@@ -68,7 +64,7 @@ const getRequestOrigin = (req) => {
 const normalizeStoredUrl = (url) => {
     if (!url || typeof url !== 'string') return url;
     return url.replace(
-        /^http:\/\/hostit-server\.up\.railway\.app(?::\d+)?(\/.*)?$/,
+        /^http:\/\/hostit-server\.up\.railway\.app(\/.*)?$/,
         'https://hostit-server.up.railway.app$1'
     );
 };
@@ -136,9 +132,6 @@ const { title, description, genre, visibility, version, fileSize, platforms, tag
                 htmlPreviewUrl = `${origin}/uploads/${uploadFolderName}/${relativeHtmlPath}`;
                 archiveHtmlUrl = htmlPreviewUrl;
 
-                htmlPreviewUrl = normalizeStoredUrl(htmlPreviewUrl);
-                archiveHtmlUrl = normalizeStoredUrl(archiveHtmlUrl);
-
                 // remove the uploaded ZIP file now that extraction succeeded
                 try {
                     if (fs.existsSync(req.file.path)) {
@@ -156,9 +149,6 @@ const { title, description, genre, visibility, version, fileSize, platforms, tag
             isWebGLLaunchable = true;
             archiveHtmlUrl = `${origin}/uploads/${req.file.filename}`;
             htmlPreviewUrl = archiveHtmlUrl;
-
-            htmlPreviewUrl = normalizeStoredUrl(htmlPreviewUrl);
-            archiveHtmlUrl = normalizeStoredUrl(archiveHtmlUrl);
         }
     }
 
@@ -171,7 +161,7 @@ const { title, description, genre, visibility, version, fileSize, platforms, tag
         visibility: visibility || 'Public',
         version: version || 'v1.0.0',
         fileSize: fileSize || 'unknown',
-        fileURL: normalizeStoredUrl(htmlPreviewUrl),
+        fileURL: htmlPreviewUrl,
         stars: 0,
         forks: 0,
         isWebGLLaunchable,

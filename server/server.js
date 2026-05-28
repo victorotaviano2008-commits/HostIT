@@ -47,18 +47,8 @@ app.get('/health', (req, res) => {
 // Ensure WebGL build files are served with correct MIME types and CORS headers
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', (req, res, next) => {
-  const allowedFrameAncestors = [
-    "'self'",
-    'https://hostit.up.railway.app',
-    'https://hostit-server.up.railway.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ];
-
   res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Content-Security-Policy', `frame-ancestors ${allowedFrameAncestors.join(' ')};`);
-  res.setHeader('X-Frame-Options', 'ALLOW-FROM https://hostit.up.railway.app');
   next();
 }, express.static(uploadsPath, {
   setHeaders: (res, filePath) => {

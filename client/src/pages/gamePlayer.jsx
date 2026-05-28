@@ -15,12 +15,21 @@ const GamePlayer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const getSafeFileUrl = (url) => {
+        if (!url || typeof url !== 'string') return url;
+        return url.replace(/^http:\/\/hostit-server\.up\.railway\.app\//, 'https://hostit-server.up.railway.app/');
+    };
+
     useEffect(() => {
         const fetchGame = async () => {
             try {
                 const response = await database.get(`/games/${id}`);
                 console.log('Game data fetched:', response.data);
-                setGame(response.data);
+                const safeData = {
+                    ...response.data,
+                    fileURL: getSafeFileUrl(response.data.fileURL),
+                };
+                setGame(safeData);
                 setIsFavorited(!!response.data.isFavorited);
             } catch (err) {
                 setError('Error loading game: ' + (err.response?.data?.message || err.message));
@@ -63,7 +72,7 @@ const GamePlayer = () => {
       {/* NAVBAR */}
       <nav className="border-b border-slate-900 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <a href="/" className="text-xl font-black tracking-tight">
+          <a href="#" className="text-xl font-black tracking-tight">
             Host<span className="text-indigo-500">IT</span>
           </a>
           <div className="flex items-center gap-4 text-sm font-medium text-slate-400">
@@ -81,9 +90,9 @@ const GamePlayer = () => {
           
           {/* Identificação do Repositório */}
           <div className="flex items-center gap-2 text-lg sm:text-xl font-mono">
-            <a href="/" className="text-indigo-400 hover:underline">@{game?.developer || 'unknown'}</a>
+            <a href="#" className="text-indigo-400 hover:underline">@{game?.developer || 'unknown'}</a>
             <span className="text-slate-600">/</span>
-            <a href="/" className="font-bold hover:underline text-slate-200">{(game?.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-')}</a>
+            <a href="#" className="font-bold hover:underline text-slate-200">{(game?.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-')}</a>
             <span className="text-xs font-sans bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full ml-2">{game?.visibility || 'Public'}</span>            <span className="text-xs font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full ml-2">{game?.codeOpenSource ? 'Open Source' : 'Closed Source'}</span>          </div>
 
           {/* Ações Sociais / Gamedev Stats */}
