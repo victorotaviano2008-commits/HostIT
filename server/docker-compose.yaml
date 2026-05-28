@@ -1,0 +1,10 @@
+services:
+  db:
+    container_name: gamerhostdb
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: GHs1312
+      MYSQL_DATABASE: gamerhostdb
+    ports:
+      - "3306:3306"
