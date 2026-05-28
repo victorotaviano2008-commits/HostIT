@@ -15,34 +15,13 @@ const GamePlayer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const getSafeFileUrl = (url) => {
-        if (!url || typeof url !== 'string') return url;
-        return url.replace(/^http:\/\/hostit-server\.up\.railway\.app(?::\d+)?(\/.*)?$/,
-            (match, path = '/') => `https://hostit-server.up.railway.app${path}`
-        );
-    };
-
-    const normalizeGameResponse = (data) => {
-        if (!data || typeof data !== 'object') return data;
-        const rawFileUrl = data.fileURL ?? data.fileUrl ?? data.url ?? null;
-        return {
-            ...data,
-            fileURL: getSafeFileUrl(rawFileUrl)
-        };
-    };
-
     useEffect(() => {
         const fetchGame = async () => {
             try {
                 const response = await database.get(`/games/${id}`);
                 console.log('Game data fetched:', response.data);
-                const safeData = normalizeGameResponse(response.data);
-                console.log('Normalized game data:', safeData);
-                if (!safeData.fileURL) {
-                    throw new Error('Game file URL is missing');
-                }
-                setGame(safeData);
-                setIsFavorited(!!safeData.isFavorited);
+                setGame(response.data);
+                setIsFavorited(!!response.data.isFavorited);
             } catch (err) {
                 setError('Error loading game: ' + (err.response?.data?.message || err.message));
                 console.error('Error fetching game:', err);
