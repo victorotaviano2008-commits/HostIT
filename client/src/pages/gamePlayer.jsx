@@ -17,7 +17,9 @@ const GamePlayer = () => {
 
     const getSafeFileUrl = (url) => {
         if (!url || typeof url !== 'string') return url;
-        return url.replace(/^http:\/\/hostit-server\.up\.railway\.app\//, 'https://hostit-server.up.railway.app/');
+        return url.replace(/^http:\/\/hostit-server\.up\.railway\.app(?::\d+)?(\/.*)?$/,
+            (match, path = '/') => `https://hostit-server.up.railway.app${path}`
+        );
     };
 
     useEffect(() => {
@@ -220,20 +222,6 @@ const GamePlayer = () => {
           >
             📜 Sobre o Jogo
           </button>
-          <button 
-            onClick={() => setActiveTab('codigo')}
-            className={`pb-4 border-b-2 transition-all flex items-center gap-1.5 ${activeTab === 'codigo' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
-          >
-            <span>📂 Código Fonte</span>
-            <span className="bg-slate-900 text-slate-500 text-[10px] font-mono px-1.5 py-0.2 rounded-md">Open</span>
-          </button>
-          <button 
-            onClick={() => setActiveTab('issues')}
-            className={`pb-4 border-b-2 transition-all ${activeTab === 'issues' ? 'border-transparent text-slate-600 cursor-not-allowed' : 'border-transparent'}`}
-            disabled
-          >
-            🐛 Issues (0)
-          </button>
         </div>
 
         {/* CONTEÚDO DAS ABAS */}
@@ -256,41 +244,6 @@ const GamePlayer = () => {
               </article>
             )}
 
-            {activeTab === 'codigo' && (
-              game?.codeOpenSource ? (
-                <div className="border border-slate-800 bg-slate-900 rounded-xl overflow-hidden font-mono text-sm shadow-xl">
-                  <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 text-xs text-slate-400 flex justify-between items-center">
-                    <span>Último commit por @{game?.developer || 'unknown'} há 2 dias</span>
-                    <span className="text-indigo-400">main branch</span>
-                  </div>
-                  <div className="divide-y divide-slate-800/50 text-slate-300">
-                    <div className="px-4 py-2.5 hover:bg-slate-800/40 cursor-pointer flex justify-between">
-                      <span className="text-amber-400">📁 assets/</span>
-                      <span className="text-xs text-slate-500">Update sprite sheets</span>
-                    </div>
-                    <div className="px-4 py-2.5 hover:bg-slate-800/40 cursor-pointer flex justify-between">
-                      <span className="text-amber-400">📁 src/</span>
-                      <span className="text-xs text-slate-500">Fix collision bugs in player control</span>
-                    </div>
-                    <div className="px-4 py-2.5 hover:bg-slate-800/40 cursor-pointer flex justify-between">
-                      <span className="text-indigo-400">📄 project.godot</span>
-                      <span className="text-xs text-slate-500">Initial engine config</span>
-                    </div>
-                    <div className="px-4 py-2.5 hover:bg-slate-800/40 cursor-pointer flex justify-between">
-                      <span className="text-slate-400">📄 README.md</span>
-                      <span className="text-xs text-slate-500">Add controls documentation</span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-slate-300">
-                  <h3 className="text-lg font-semibold text-slate-100 mb-3">Código fechado</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    Este projeto não está configurado como open source. As configurações de repositório e licença não estão disponíveis publicamente.
-                  </p>
-                </div>
-              )
-            )}
           </div>
 
           {/* COLUNA DA DIREITA: METADADOS E METRICS */}

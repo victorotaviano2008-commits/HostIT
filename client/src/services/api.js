@@ -13,7 +13,9 @@ const api = axios.create({
 
 const normalizeBackendUrl = (value) => {
   if (typeof value === 'string') {
-    return value.replace(/^http:\/\/hostit-server\.up\.railway\.app\//, 'https://hostit-server.up.railway.app/');
+    return value.replace(/^http:\/\/hostit-server\.up\.railway\.app(?::\d+)?(\/.*)?$/,
+      (match, path = '/') => `https://hostit-server.up.railway.app${path}`
+    );
   }
   return value;
 };
