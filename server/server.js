@@ -13,10 +13,19 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [process.env.BACKEND_URL, process.env.FRONTEND_URL];
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      process.env.BACKEND_URL,
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://hostit.up.railway.app',
+      'https://hostit-server.up.railway.app'
+    ].filter(Boolean);
+    
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`CORS request blocked from: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -71,8 +80,8 @@ if (fs.existsSync(path.join(clientDistPath, 'index.html'))) {
   });
 }
 
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Servidor rodando na porta ${process.env.PORT || 3000}`);
     db.sequelize.sync({ alter: true }).then(() => {
         console.log('Banco de dados sincronizado');
     }).catch((error) => {
