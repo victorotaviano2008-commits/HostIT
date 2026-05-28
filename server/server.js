@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const app = express();
+// When running behind a proxy (Railway, Heroku, etc.), trust X-Forwarded-* headers
+app.set('trust proxy', true);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./configs/db.js');

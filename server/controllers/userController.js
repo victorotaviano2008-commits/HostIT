@@ -62,7 +62,7 @@ const { title, description, genre, visibility, version, fileSize, platforms, tag
         return res.status(400).json({ message: 'Title and description are required' });
     }
 
-    const origin = `${req.protocol}://${req.get('host')}`;
+    const origin = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
     const uploadFolderName = req.file ? path.basename(req.file.filename, path.extname(req.file.filename)) : null;
     const uploadFolder = uploadFolderName ? path.join(__dirname, '../uploads', uploadFolderName) : null;
     let isWebGLLaunchable = false;
