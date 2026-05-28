@@ -11,6 +11,37 @@ const api = axios.create({
   }
 });
 
+const normalizeBackendUrl = (value) => {
+  if (typeof value === 'string') {
+    return value.replace(/^http:\/\/hostit-server\.up\.railway\.app\//, 'https://hostit-server.up.railway.app/');
+  }
+  return value;
+};
+
+const normalizeResponseData = (data) => {
+  if (Array.isArray(data)) {
+    return data.map(normalizeResponseData);
+  }
+  if (data && typeof data === 'object') {
+    const normalized = {};
+    for (const key of Object.keys(data)) {
+      normalized[key] = normalizeResponseData(data[key]);
+    }
+    return normalized;
+  }
+  return normalizeBackendUrl(data);
+};
+
+api.interceptors.response.use(
+  (response) => {
+    if (response && response.data) {
+      response.data = normalizeResponseData(response.data);
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const setAuthToken = (token) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

@@ -15,12 +15,21 @@ const GamePlayer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const getSafeFileUrl = (url) => {
+        if (!url || typeof url !== 'string') return url;
+        return url.replace(/^http:\/\/hostit-server\.up\.railway\.app\//, 'https://hostit-server.up.railway.app/');
+    };
+
     useEffect(() => {
         const fetchGame = async () => {
             try {
                 const response = await database.get(`/games/${id}`);
                 console.log('Game data fetched:', response.data);
-                setGame(response.data);
+                const safeData = {
+                    ...response.data,
+                    fileURL: getSafeFileUrl(response.data.fileURL),
+                };
+                setGame(safeData);
                 setIsFavorited(!!response.data.isFavorited);
             } catch (err) {
                 setError('Error loading game: ' + (err.response?.data?.message || err.message));
