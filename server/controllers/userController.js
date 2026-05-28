@@ -42,6 +42,33 @@ const findHtmlEntry = (entries) => {
     return htmlEntries[0];
 };
 
+const getRequestOrigin = (req) => {
+    const envOrigin = process.env.BACKEND_URL;
+    if (envOrigin) {
+        return envOrigin.replace(/\/$/, '');
+    }
+
+    const forwardedProto = req.headers['x-forwarded-proto']
+        ? req.headers['x-forwarded-proto'].split(',')[0].trim()
+        : null;
+    const protocol = forwardedProto || req.protocol || 'https';
+    const host = req.get('host');
+
+    if (host && host.includes('hostit-server.up.railway.app')) {
+        return `https://${host}`;
+    }
+
+    return `${protocol}://${host}`;
+};
+
+const normalizeStoredUrl = (url) => {
+    if (!url || typeof url !== 'string') return url;
+    return url.replace(
+        /^http:\/\/hostit-server\.up\.railway\.app(\/.*)?$/,
+        'https://hostit-server.up.railway.app$1'
+    );
+};
+
 let uploadGame = async(req, res) => {
     try {
 const { title, description, genre, visibility, version, fileSize, platforms, tags, codeOpenSource, repoVisibility, license, repositoryUrl } = req.body;
@@ -62,7 +89,7 @@ const { title, description, genre, visibility, version, fileSize, platforms, tag
         return res.status(400).json({ message: 'Title and description are required' });
     }
 
-    const origin = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+    const origin = getRequestOrigin(req);
     const uploadFolderName = req.file ? path.basename(req.file.filename, path.extname(req.file.filename)) : null;
     const uploadFolder = uploadFolderName ? path.join(__dirname, '../uploads', uploadFolderName) : null;
     let isWebGLLaunchable = false;
@@ -172,7 +199,8 @@ let getGameById = async (req, res) => {
         const parsedGame = {
             ...game.toJSON(),
             platforms: game.platforms ? JSON.parse(game.platforms) : [],
-            tags: game.tags ? JSON.parse(game.tags) : []
+            tags: game.tags ? JSON.parse(game.tags) : [],
+            fileURL: normalizeStoredUrl(game.fileURL),
         };
 
         // if authenticated, include whether the current user favorited this game
@@ -206,7 +234,8 @@ let getAllGames = (req, res) => {
         const parsedGames = games.map(game => ({
             ...game.toJSON(),
             platforms: game.platforms ? JSON.parse(game.platforms) : [],
-            tags: game.tags ? JSON.parse(game.tags) : []
+            tags: game.tags ? JSON.parse(game.tags) : [],
+            fileURL: normalizeStoredUrl(game.fileURL),
         }));
         res.json(parsedGames);
     }).catch(error => {
